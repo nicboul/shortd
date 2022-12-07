@@ -66,6 +66,17 @@ func (writer *Writer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	hash.Write([]byte(url.Str))
 	h := hash.Sum(nil)
 
-	fmt.Printf("%x :: %s\n", h[:4], base66Convert(h[:4]))
+	short := base66Convert(h[:4])
+	url.Str = "http://127.0.0.1/" + short
+	jsonStr, err := json.Marshal(url)
+	if err != nil {
+		fmt.Printf(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	jsonStr = append(jsonStr, []byte("\n")...)
+	w.Write(jsonStr)
 
 }

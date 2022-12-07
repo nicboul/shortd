@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/nicboul/shortd/internal/store"
 )
 
 type Writer struct {
@@ -67,8 +69,11 @@ func (writer *Writer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	h := hash.Sum(nil)
 
 	short := base66Convert(h[:3])
-	url.Str = "http://127.0.0.1/" + short
-	jsonStr, err := json.Marshal(url)
+
+	store.KV[short] = url.Str
+
+	shortUrl := &Url{Str: "http://127.0.0.1:8080/" + short}
+	jsonStr, err := json.Marshal(shortUrl.Str)
 	if err != nil {
 		fmt.Printf(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

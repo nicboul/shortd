@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl http://127.0.0.1:8080 \
+curl -v http://127.0.0.1:8080 \
 -H 'Content-Type: application/json' \
 -d \
 '

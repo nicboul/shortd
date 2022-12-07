@@ -73,7 +73,7 @@ func (writer *Writer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	store.KV[short] = url.Str
 
 	shortUrl := &Url{Str: "http://127.0.0.1:8080/" + short}
-	jsonStr, err := json.Marshal(shortUrl.Str)
+	jsonStr, err := json.Marshal(shortUrl)
 	if err != nil {
 		fmt.Printf(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

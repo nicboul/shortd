@@ -11,14 +11,15 @@ import (
 )
 
 type Writer struct {
+	ds store.Datastore
 }
 
 type Url struct {
 	Str string `json:"url"`
 }
 
-func NewWriter() *Writer {
-	return &Writer{}
+func NewWriter(ds store.Datastore) *Writer {
+	return &Writer{ds: ds}
 }
 
 var base66 = []byte{'-', '.', '_', '~',
@@ -70,7 +71,7 @@ func (writer *Writer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	short := base66Convert(h[:3])
 
-	store.KV[short] = url.Str
+	writer.ds.WriteURL(req.Context(), short, url.Str)
 
 	shortUrl := &Url{Str: "http://127.0.0.1:8080/" + short}
 	jsonStr, err := json.Marshal(shortUrl)

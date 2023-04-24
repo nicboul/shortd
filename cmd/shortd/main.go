@@ -13,11 +13,10 @@ func main() {
 	portFlag := flag.String("port", "8080", "the port we listen to")
 	flag.Parse()
 
-	// temporary to test the logic
-	store.StoreInit()
+	ds, _ := store.NewMemoryDatastore()
 
 	listen := *ipFlag + ":" + *portFlag
-	server := server.NewServer(listen)
+	server := server.NewServer(listen, ds)
 	server.Serve()
 
 }
